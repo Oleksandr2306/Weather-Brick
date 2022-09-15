@@ -9,21 +9,24 @@
 import UIKit
 import CoreLocation
 
-class WeatherBrickViewController: UIViewController {
+final class WeatherBrickViewController: UIViewController {
 
     @IBOutlet weak private var weatherBrickImage: UIImageView!
     @IBOutlet weak private var temperatureLabel: UILabel!
     @IBOutlet weak private var weatherLabel: UILabel!
     @IBOutlet weak private var cityLabel: UILabel!
+    @IBOutlet weak private var gpsButton: UIButton!
+    @IBOutlet weak private var searchButton: UIButton!
     @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak private var infoButton: UIButton!
     
     private lazy var weatherManager = WeatherManager()
     private lazy var locationManager = CLLocationManager()
+    var city = ""
     
     private enum brickImages {
         case raining
-        case sunny
+        case normal
         case fog
         case hot
         case snowing
@@ -34,7 +37,7 @@ class WeatherBrickViewController: UIViewController {
             switch self {
             case .raining:
                 return UIImage(named: "raining")!
-            case .sunny:
+            case .normal:
                 return UIImage(named: "normal")!
             case .fog:
                 return UIImage(named: "normal")!
@@ -69,9 +72,18 @@ class WeatherBrickViewController: UIViewController {
             gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.75)
             return gradientLayer
         }()
+                
         gradientLayer.frame = infoButton.bounds
         gradientLayer.cornerRadius = 10
         infoButton.layer.insertSublayer(gradientLayer, at: 1)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? SearchViewController {
+            destination.callBack = { (city: String) in
+                self.weatherManager.fetchData(city: city)
+            }
+        }
     }
     
     @IBAction private func gpsButtonTapped(_ sender: UIButton!) {
@@ -82,6 +94,53 @@ class WeatherBrickViewController: UIViewController {
         
     }
     
+    private func setBrickImage(for image: UIImageView, with weatherCondition: WeatherModel) {
+        switch weatherCondition.condition {
+        case "Rain", "Drizzle", "Thunderstorm":
+            image.image = brickImages.raining.image
+            image.alpha = 1
+            break
+        case "Snow":
+            image.image = brickImages.snowing.image
+            image.alpha = 1
+            break
+        case "Fog", "Mist", "Haze":
+            image.image = brickImages.normal.image
+            image.alpha = 0.5
+            break
+        case "Clear":
+            image.image = brickImages.normal.image
+            image.alpha = 1
+            break
+        default:
+            image.image = brickImages.normal.image
+            image.alpha = 1
+            break
+        }
+        
+        if weatherCondition.windSpeed >= 5.5 {
+            image.transform.rotated(by: CGFloat(30))
+        }
+        
+        if weatherCondition.visibility < 5000 {
+            image.alpha = 0.5
+        }
+        
+    }
+    
+//    func animationPanGesture (_ panGesture: UIPanGestureRecognizer, latitude: Double, longitude: Double) {
+//        switch panGesture.state{
+//        case .began:
+//            NSLayoutConstraint.constant = -40
+//        case .ended:
+//            brickImageYConstrait.constant = -80
+//            UIView.animate(withDuration: 0.25) {
+//                self.view.layoutIfNeeded()
+//            }
+//        default: break
+//        }
+//        panGesture.setTranslation(.zero, in: self.view)
+//    }
     
 }
 
@@ -90,10 +149,14 @@ extension WeatherBrickViewController: WeatherManagerDelegate {
     func didUpdateData(data: WeatherModel) {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
-            self.weatherBrickImage.image = brickImages.hot.image
+            self.setBrickImage(for: self.weatherBrickImage, with: data)
             self.weatherBrickImage.isHidden = false
-            self.temperatureLabel.text = String(format: "%.1f", data.temp)
-            self.weatherLabel.text = data.name
+            
+            self.temperatureLabel.text = String(format: "%.1f°", data.temp)
+            self.weatherLabel.text = data.condition
+            self.cityLabel.text = "\(data.country), \(data.name)"
+            self.gpsButton.isHidden = false
+            self.searchButton.isHidden = false
         }
     }
     
@@ -112,6 +175,15 @@ extension WeatherBrickViewController: WeatherManagerDelegate {
 //MARK: - CLLocationManagerDelegate
 extension WeatherBrickViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.activityIndicator.stopAnimating()
+        self.weatherBrickImage.image = brickImages.fail.image
+        self.weatherBrickImage.isHidden = false
+        self.temperatureLabel.text = ""
+        self.weatherLabel.text = ""
+        self.cityLabel.text = ""
+        self.gpsButton.isHidden = true
+        self.searchButton.isHidden = true
+        
         guard let location = locations.last else { return }
         locationManager.stopUpdatingLocation()
         let lat = location.coordinate.latitude
@@ -121,6 +193,12 @@ extension WeatherBrickViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.activityIndicator.stopAnimating()
+        self.weatherBrickImage.image = brickImages.fail.image
+        self.weatherBrickImage.isHidden = false
+        self.temperatureLabel.text = ""
+        self.weatherLabel.text = ""
+        self.cityLabel.text = ""
         print(error)
     }
 }
