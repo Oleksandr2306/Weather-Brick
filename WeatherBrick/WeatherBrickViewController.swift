@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 final class WeatherBrickViewController: UIViewController {
-
+    
     @IBOutlet weak private var weatherBrickImage: UIImageView!
     @IBOutlet weak private var temperatureLabel: UILabel!
     @IBOutlet weak private var weatherLabel: UILabel!
@@ -19,6 +19,7 @@ final class WeatherBrickViewController: UIViewController {
     @IBOutlet weak private var searchButton: UIButton!
     @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak private var infoButton: UIButton!
+    @IBOutlet weak var weatherBrickPosition: NSLayoutConstraint!
     
     private lazy var weatherManager = WeatherManager()
     private lazy var locationManager = CLLocationManager()
@@ -55,7 +56,7 @@ final class WeatherBrickViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        weatherBrickImage.transform.rotated(by: CGFloat(90))
         locationManager.requestWhenInUseAuthorization()
         locationManager.delegate = self
         locationManager.requestLocation()
@@ -72,7 +73,10 @@ final class WeatherBrickViewController: UIViewController {
             gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.75)
             return gradientLayer
         }()
-                
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector (animationPanGesture(_:latitude:longitude:)))
+        weatherBrickImage.addGestureRecognizer(panGesture)
+        
         gradientLayer.frame = infoButton.bounds
         gradientLayer.cornerRadius = 10
         infoButton.layer.insertSublayer(gradientLayer, at: 1)
@@ -95,20 +99,30 @@ final class WeatherBrickViewController: UIViewController {
     }
     
     private func setBrickImage(for image: UIImageView, with weatherCondition: WeatherModel) {
-        switch weatherCondition.condition {
-        case "Rain", "Drizzle", "Thunderstorm":
+        print(weatherCondition.id)
+        switch weatherCondition.id {
+        case 0...200 :
+            image.image = brickImages.hot.image
+            image.alpha = 1
+            break
+        case 200...599 :
             image.image = brickImages.raining.image
             image.alpha = 1
             break
-        case "Snow":
+        case 600...699 :
             image.image = brickImages.snowing.image
-            image.alpha = 1
             break
-        case "Fog", "Mist", "Haze":
+        case 700...762 :
+            //fog
             image.image = brickImages.normal.image
             image.alpha = 0.5
             break
-        case "Clear":
+        case 763...799 :
+            //wind
+            image.image = brickImages.normal.image
+            image.alpha = 1
+            break
+        case 800...900 :
             image.image = brickImages.normal.image
             image.alpha = 1
             break
@@ -119,7 +133,7 @@ final class WeatherBrickViewController: UIViewController {
         }
         
         if weatherCondition.windSpeed >= 5.5 {
-            image.transform.rotated(by: CGFloat(30))
+            
         }
         
         if weatherCondition.visibility < 5000 {
@@ -128,19 +142,21 @@ final class WeatherBrickViewController: UIViewController {
         
     }
     
-//    func animationPanGesture (_ panGesture: UIPanGestureRecognizer, latitude: Double, longitude: Double) {
-//        switch panGesture.state{
-//        case .began:
-//            NSLayoutConstraint.constant = -40
-//        case .ended:
-//            brickImageYConstrait.constant = -80
-//            UIView.animate(withDuration: 0.25) {
-//                self.view.layoutIfNeeded()
-//            }
-//        default: break
-//        }
-//        panGesture.setTranslation(.zero, in: self.view)
-//    }
+    @objc func animationPanGesture (_ panGesture: UIPanGestureRecognizer, latitude: Double, longitude: Double) {
+        switch panGesture.state{
+        case .began:
+            weatherBrickPosition.constant = 0
+        case .ended:
+            weatherBrickPosition.constant = -32
+            UIView.animate(withDuration: 0.25) {
+                self.view.layoutIfNeeded()
+            }
+            locationManager.requestLocation()
+        default:
+            break
+        }
+        panGesture.setTranslation(.zero, in: self.view)
+    }
     
 }
 

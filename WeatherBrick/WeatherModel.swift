@@ -15,4 +15,5 @@ struct WeatherModel {
     let condition: String
     let windSpeed: Double
     let visibility: Int
+    let id: Int
 }

@@ -23,6 +23,7 @@ struct Main: Decodable {
 
 struct Weather: Decodable {
     let main: String
+    let id: Int
 }
 
 struct Wind: Decodable {

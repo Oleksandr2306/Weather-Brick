@@ -56,8 +56,9 @@ struct WeatherManager {
             let condition = decodedData.weather[0].main
             let windSpeed = decodedData.wind.speed
             let visibility = decodedData.visibility
+            let id = decodedData.weather[0].id
             
-            return WeatherModel(name: name, country: country, temp: temperature, condition: condition, windSpeed: windSpeed, visibility: visibility)
+            return WeatherModel(name: name, country: country, temp: temperature, condition: condition, windSpeed: windSpeed, visibility: visibility, id: id)
         } catch {
             delegate?.didFailWithError(error: error)
             
