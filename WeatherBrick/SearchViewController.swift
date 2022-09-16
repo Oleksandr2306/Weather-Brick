@@ -10,20 +10,22 @@ import UIKit
 
 final class SearchViewController: UIViewController {
 
-    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var suggestionsTable: UITableView!
     private lazy var cityManager = CityManager()
     
     private var cities: [CityObject]?
     private var filteredCities = [CityObject]()
     var callBack: ((_ city: String) -> Void)?
+    private let search = UISearchController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        searchBar.delegate = self
+        search.searchResultsUpdater = self
         suggestionsTable.delegate = self
         suggestionsTable.dataSource = self
+        
+        navigationItem.searchController = search
         
         let queue = DispatchQueue(label: "cities")
         queue.async {
@@ -36,28 +38,25 @@ final class SearchViewController: UIViewController {
     
 }
 
-extension SearchViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        guard let text = searchBar.text else { return }
-        callBack?(text)
-        navigationController?.popToRootViewController(animated: true)
+extension SearchViewController: UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        let queue = DispatchQueue(label: "Search")
+        guard let text = searchController.searchBar.text else { return }
+        queue.async {
+            guard let cityList = self.cities else { return }
+            self.filteredCities = cityList.filter({ (city: CityObject) in
+                if text.count > 2 && city.name.lowercased().contains(text.lowercased()) {
+                    return true
+                }
+                return false
+            })
+            self.filteredCities.sort(by: {$0.name.count < $1.name.count})
+        }
+        suggestionsTable.reloadData()
     }
     
-    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard let text = searchBar.text else { return true }
-        guard let cityList = cities else { return true }
-        filteredCities = cityList.filter({ (city: CityObject) in
-            if text.count > 2 && city.name.lowercased().contains(text.lowercased()) {
-                return true
-            }
-            return false
-        })
-        filteredCities.sort(by: {$0.name.count < $1.name.count})
-        suggestionsTable.reloadData()
-        
-        return true
-    }
+    
 }
 
 extension SearchViewController: UITableViewDataSource {
@@ -91,7 +90,9 @@ extension SearchViewController: UITableViewDataSource {
 
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        callBack?(filteredCities[indexPath.section].name)
+        let cell = tableView.cellForRow(at: indexPath) as! SugestionTableViewCell
+        
+        callBack?(cell.cityLabel.text!)
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.popToRootViewController(animated: true)
     }
