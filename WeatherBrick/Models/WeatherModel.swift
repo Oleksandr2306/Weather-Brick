@@ -13,7 +13,5 @@ struct WeatherModel {
     let country: String
     let temp: Double
     let condition: String
-    let windSpeed: Double
-    let visibility: Int
     let id: Int
 }
