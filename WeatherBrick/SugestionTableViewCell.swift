@@ -8,9 +8,9 @@
 
 import UIKit
 
-class SugestionTableViewCell: UITableViewCell {
+final class SugestionTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var cityLabel: UILabel!
+    @IBOutlet weak private(set) var cityLabel: UILabel!
     @IBOutlet weak private var countryLabel: UILabel!
     @IBOutlet weak private var coordinatesLabel: UILabel!
     override func awakeFromNib() {

@@ -26,6 +26,7 @@
 		F0B2948028D21D2E0051E62E /* CityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B2947F28D21D2E0051E62E /* CityManager.swift */; };
 		F0B2948228D21D750051E62E /* CityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B2948128D21D750051E62E /* CityModel.swift */; };
 		F0B2948428D21DC10051E62E /* city.json in Resources */ = {isa = PBXBuildFile; fileRef = F0B2948328D21DC10051E62E /* city.json */; };
+		F0B3091028D7411C00EE6DF1 /* InfoWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B3090F28D7411C00EE6DF1 /* InfoWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		F0B2947F28D21D2E0051E62E /* CityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityManager.swift; sourceTree = "<group>"; };
 		F0B2948128D21D750051E62E /* CityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityModel.swift; sourceTree = "<group>"; };
 		F0B2948328D21DC10051E62E /* city.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = city.json; sourceTree = "<group>"; };
+		F0B3090F28D7411C00EE6DF1 /* InfoWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 				F0323C8828D10A6C0007CA67 /* SearchViewController.swift */,
 				F048140F28D1DB5100B6915B /* SugestionTableViewCell.swift */,
 				F0AC761E28D4B08300A72B4B /* ViewController.swift */,
+				F0B3090F28D7411C00EE6DF1 /* InfoWindow.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0AC761F28D4B08300A72B4B /* ViewController.swift in Sources */,
+				F0B3091028D7411C00EE6DF1 /* InfoWindow.swift in Sources */,
 				F0B2948028D21D2E0051E62E /* CityManager.swift in Sources */,
 				F0323C8928D10A6C0007CA67 /* SearchViewController.swift in Sources */,
 				F087246C28CFA47800FF2249 /* WeatherManager.swift in Sources */,
@@ -546,13 +550,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S924HA4UMT;
 				INFOPLIST_FILE = WeatherBrick/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vandrj.WeatherBrick;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.self.WeatherBrick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -564,13 +569,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = S924HA4UMT;
 				INFOPLIST_FILE = WeatherBrick/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vandrj.WeatherBrick;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.self.WeatherBrick;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

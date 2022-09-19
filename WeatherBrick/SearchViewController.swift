@@ -9,7 +9,7 @@
 import UIKit
 
 final class SearchViewController: UIViewController {
-
+    
     @IBOutlet weak var suggestionsTable: UITableView!
     private lazy var cityManager = CityManager()
     
@@ -17,10 +17,11 @@ final class SearchViewController: UIViewController {
     private var filteredCities = [CityObject]()
     var callBack: ((_ city: String) -> Void)?
     private let search = UISearchController()
+    private var timer: Timer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         search.searchResultsUpdater = self
         suggestionsTable.delegate = self
         suggestionsTable.dataSource = self
@@ -41,19 +42,24 @@ final class SearchViewController: UIViewController {
 extension SearchViewController: UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        let queue = DispatchQueue(label: "Search")
+        timer?.invalidate()
         guard let text = searchController.searchBar.text else { return }
-        queue.async {
-            guard let cityList = self.cities else { return }
+        guard let cityList = self.cities else { return }
+        var flag = 0
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
             self.filteredCities = cityList.filter({ (city: CityObject) in
-                if text.count > 2 && city.name.lowercased().contains(text.lowercased()) {
+                
+                if city.name.lowercased().contains(text.lowercased()) && flag < 10 {
+                    flag += 1
                     return true
                 }
                 return false
             })
+            
             self.filteredCities.sort(by: {$0.name.count < $1.name.count})
-        }
-        suggestionsTable.reloadData()
+            self.suggestionsTable.reloadData()
+        })
     }
     
     
@@ -80,6 +86,7 @@ extension SearchViewController: UITableViewDataSource {
         cell.setCityLabel(city: filteredCities[indexPath.section].name)
         cell.setCountryLabel(country: filteredCities[indexPath.section].country)
         cell.setCoordinatesLabel(latitude: filteredCities[indexPath.section].coord.lat, longitude: filteredCities[indexPath.section].coord.lon)
+        cell.layer.borderWidth = 0
         cell.layer.cornerRadius = 10
         
         return cell

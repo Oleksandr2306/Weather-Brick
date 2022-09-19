@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CityManager {
+struct CityManager {
     
     func getCity(compelition: @escaping ([CityObject]) -> ()) {
         

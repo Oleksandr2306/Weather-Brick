@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cDc-Ib-XZE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cDc-Ib-XZE">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,7 +17,7 @@
         <!--Weather Brick View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController interfaceStyle="light" id="BYZ-38-t0r" customClass="WeatherBrickViewController" customModule="WeatherBrick" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="WeatherBrickViewController" customModule="WeatherBrick" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -69,6 +69,9 @@
                                     </attributedString>
                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="infoButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iHz-8m-y4R"/>
+                                </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="Qwa-Ud-73x">
                                 <rect key="frame" x="151" y="680" width="112" height="136"/>
@@ -96,7 +99,6 @@
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" image="icon_search"/>
                                         <connections>
-                                            <action selector="searchButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qLG-4d-LX7"/>
                                             <segue destination="C0T-s2-whj" kind="show" id="b4b-Hv-Pjl"/>
                                         </connections>
                                     </button>
@@ -157,15 +159,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_background" translatesAutoresizingMaskIntoConstraints="NO" id="yxx-hn-EN6">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="image_background" translatesAutoresizingMaskIntoConstraints="NO" id="lVU-iT-DPk">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="dkj-ei-Rtn">
-                                <rect key="frame" x="20" y="88" width="374" height="808"/>
+                                <rect key="frame" x="20" y="92" width="374" height="804"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="100" id="ILy-E3-cyo" customClass="SugestionTableViewCell" customModule="WeatherBrick" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="374" height="100"/>
+                                        <rect key="frame" x="0.0" y="50" width="374" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ILy-E3-cyo" id="j6P-pK-Uw2">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="100"/>
@@ -219,14 +221,14 @@
                         <viewLayoutGuide key="safeArea" id="7AV-Z9-eh1"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="yxx-hn-EN6" firstAttribute="top" secondItem="pcg-gj-3An" secondAttribute="top" id="F6T-8q-q9t"/>
-                            <constraint firstItem="yxx-hn-EN6" firstAttribute="leading" secondItem="7AV-Z9-eh1" secondAttribute="leading" id="Qcf-C0-XLR"/>
-                            <constraint firstItem="yxx-hn-EN6" firstAttribute="trailing" secondItem="7AV-Z9-eh1" secondAttribute="trailing" id="aGy-hp-CQO"/>
+                            <constraint firstItem="lVU-iT-DPk" firstAttribute="leading" secondItem="7AV-Z9-eh1" secondAttribute="leading" id="A4K-V7-4GP"/>
+                            <constraint firstItem="lVU-iT-DPk" firstAttribute="trailing" secondItem="7AV-Z9-eh1" secondAttribute="trailing" id="Gbi-x4-KLi"/>
+                            <constraint firstAttribute="bottom" secondItem="lVU-iT-DPk" secondAttribute="bottom" id="Ogq-wx-UOj"/>
                             <constraint firstItem="dkj-ei-Rtn" firstAttribute="leading" secondItem="7AV-Z9-eh1" secondAttribute="leading" constant="20" id="fVM-hg-p5g"/>
                             <constraint firstAttribute="bottom" secondItem="dkj-ei-Rtn" secondAttribute="bottom" id="iBW-uf-llO"/>
                             <constraint firstItem="7AV-Z9-eh1" firstAttribute="trailing" secondItem="dkj-ei-Rtn" secondAttribute="trailing" constant="20" id="mg1-Nl-DZj"/>
+                            <constraint firstItem="lVU-iT-DPk" firstAttribute="top" secondItem="pcg-gj-3An" secondAttribute="top" id="ogA-KN-GLX"/>
                             <constraint firstItem="dkj-ei-Rtn" firstAttribute="top" secondItem="7AV-Z9-eh1" secondAttribute="top" id="uV2-O4-fyd"/>
-                            <constraint firstAttribute="bottom" secondItem="yxx-hn-EN6" secondAttribute="bottom" id="wBS-e0-VLP"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="1dq-bQ-BnP"/>
@@ -244,7 +246,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cDc-Ib-XZE" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="WdA-ff-8py">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -262,7 +264,7 @@
         <image name="icon_search" width="16" height="16"/>
         <image name="image_background" width="375" height="811"/>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

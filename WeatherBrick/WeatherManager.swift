@@ -28,7 +28,6 @@ struct WeatherManager {
     func fetchData(city: String) {
         let cityString = city.replacingOccurrences(of: " ", with: "+")
         let urlString = "\(baseURL)\(key)&units=metric&q=\(cityString)"
-        print(urlString)
         guard let url = URL(string: urlString) else { return }
         performRequest(url)
     }
@@ -36,7 +35,6 @@ struct WeatherManager {
     private func performRequest(_ url: URL) {
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: url) { (data, response, error) in
-            print(data!)
             guard error == nil else { self.delegate?.didFailWithError(error: error!); return }
             if let safeData = data {
                 guard let weather = parseJSON(safeData) else { return }
