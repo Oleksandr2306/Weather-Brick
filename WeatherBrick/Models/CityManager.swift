@@ -11,8 +11,7 @@ import Foundation
 struct CityManager {
     
     func getCity(compelition: @escaping ([CityObject]) -> ()) {
-        
-        guard let path = Bundle.main.path(forResource: "city", ofType: "json") else { return }
+        guard let path = Bundle.main.path(forResource: "cities", ofType: "json") else { return }
        
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
@@ -21,7 +20,8 @@ struct CityManager {
                 compelition(object)
             }
         } catch {
-            print("Can't parse cities \(error.localizedDescription)")
+            print("Can't parse cities; \(error)")
         }
+        
     }
 }

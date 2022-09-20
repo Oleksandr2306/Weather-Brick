@@ -62,10 +62,10 @@ final class WeatherBrickViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector (panGestureAnimation(_:latitude:longitude:)))
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector (panGestureAnimation(_:)))
         weatherBrickImage.addGestureRecognizer(panGesture)
         
-        var gradientLayer: CAGradientLayer = setButtonLayer()
+        let gradientLayer: CAGradientLayer = setButtonLayer()
         infoButton.layer.insertSublayer(gradientLayer, at: 1)
     }
     
@@ -184,7 +184,7 @@ final class WeatherBrickViewController: UIViewController {
         }, completion: nil)
     }
     
-    @objc private func panGestureAnimation(_ panGesture: UIPanGestureRecognizer, latitude: Double, longitude: Double) {
+    @objc private func panGestureAnimation(_ panGesture: UIPanGestureRecognizer) {
         switch panGesture.state {
         case .began:
             if panGesture.velocity(in: weatherBrickImage).y <= 0 {

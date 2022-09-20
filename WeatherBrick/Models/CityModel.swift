@@ -14,10 +14,10 @@ import Foundation
 struct CityObject: Codable {
     var name: String
     var country: String
-    var coord: CoordCity
+    var coord: Coords
 }
 
-struct CoordCity: Codable {
+struct Coords: Codable {
     var lat: Double
     var lon: Double
 }
