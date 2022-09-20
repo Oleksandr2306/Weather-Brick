@@ -80,7 +80,7 @@ final class WeatherBrickViewController: UIViewController {
     @IBAction func infoButtonTapped(_ sender: Any) {
         infoWindow.isOpen.toggle()
         let modalWindow = infoWindow.windowOpen
-        let infoWidnowShadow = infoWindow.darkLabelInfo
+        let infoWindowShadow = infoWindow.darkLabelInfo
         
         weatherBrickImage.isHidden = infoWindow.isOpen
         temperatureLabel.isHidden = infoWindow.isOpen
@@ -89,8 +89,8 @@ final class WeatherBrickViewController: UIViewController {
         searchButton.isHidden = infoWindow.isOpen
         cityLabel.isHidden = infoWindow.isOpen
         modalWindow.isHidden = !infoWindow.isOpen
-        infoWidnowShadow.isHidden = !infoWindow.isOpen
-        setWindowConstraints(window: modalWindow, shadow: infoWidnowShadow)
+        infoWindowShadow.isHidden = !infoWindow.isOpen
+        setWindowConstraints(window: modalWindow, shadow: infoWindowShadow)
         
     }
     
