@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-final class InfoWindow: UILabel {
+final class InfoLabel: UILabel {
     
     var isOpen = false
     
-     var darkLabelInfo: UILabel = {
+    var darkLabelInfo: UILabel = {
         let darkLabelInfo = UILabel()
         darkLabelInfo.isHidden = false
         darkLabelInfo.frame = CGRect(x: 0, y: 0, width: 277, height: 372)
