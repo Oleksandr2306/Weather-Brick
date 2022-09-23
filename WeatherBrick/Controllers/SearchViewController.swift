@@ -113,7 +113,11 @@ extension SearchViewController: UITableViewDataSource {
 
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        callBack?(filteredCities[indexPath.section].name)
+        if !filteredCities.isEmpty {
+            callBack?(filteredCities[indexPath.section].name)
+        } else {
+            callBack?(userCity)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.popToRootViewController(animated: true)
     }
