@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CityManager {
+final class CityManager {
     
     func getCity(compelition: @escaping ([CityObject]) -> ()) {
         guard let path = Bundle.main.path(forResource: "cities", ofType: "json") else { return }

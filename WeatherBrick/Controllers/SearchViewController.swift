@@ -10,8 +10,10 @@ import UIKit
 
 final class SearchViewController: UIViewController {
     
-    @IBOutlet weak var suggestionsTable: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     private lazy var cityManager = CityManager()
+    private lazy var locationManager = LocationManager()
+    private lazy var weatherManager = WeatherManager()
     
     private var cities: [CityObject]?
     private var filteredCities = [CityObject]()
@@ -19,13 +21,25 @@ final class SearchViewController: UIViewController {
     private let search = UISearchController()
     private var timer: Timer!
     
+    private var userCity = "Unknown"
+    private var userCountry = "Unknown"
+    private var userLat: Double = 0
+    private var userLon: Double = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         search.searchResultsUpdater = self
-        suggestionsTable.delegate = self
-        suggestionsTable.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        locationManager.delegate = self
+        weatherManager.delegate = self
+        locationManager.requestLocation()
         
+        title = "Search"
+        
+        self.navigationController?.navigationBar.tintColor = .systemGray
+        self.navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.systemGray]
         navigationItem.searchController = search
         
         let queue = DispatchQueue(label: "cities")
@@ -58,7 +72,7 @@ extension SearchViewController: UISearchResultsUpdating {
             })
             
             self.filteredCities.sort(by: {$0.name.count < $1.name.count})
-            self.suggestionsTable.reloadData()
+            self.tableView.reloadData()
         })
     }
     
@@ -68,7 +82,9 @@ extension SearchViewController: UISearchResultsUpdating {
 extension SearchViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        filteredCities.count
+        guard let text = search.searchBar.text else { return 1 }
+        guard text.isEmpty else { return filteredCities.count }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,18 +92,18 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 20))
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 5))
         return header
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! SugestionTableViewCell
         
-        cell.setCityLabel(city: filteredCities[indexPath.section].name)
-        cell.setCountryLabel(country: filteredCities[indexPath.section].country)
-        cell.setCoordinatesLabel(latitude: filteredCities[indexPath.section].coord.lat, longitude: filteredCities[indexPath.section].coord.lon)
-        cell.layer.borderWidth = 0
-        cell.layer.cornerRadius = 10
+        if !filteredCities.isEmpty {
+            cell.configure(city: filteredCities[indexPath.section].name, country: filteredCities[indexPath.section].country, latitude: filteredCities[indexPath.section].coord.lat, longitude: filteredCities[indexPath.section].coord.lon)
+        } else {
+            cell.configure(city: userCity, country: userCountry, latitude: userLat, longitude: userLon)
+        }
         
         return cell
     }
@@ -97,9 +113,7 @@ extension SearchViewController: UITableViewDataSource {
 
 extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SugestionTableViewCell
-        
-        callBack?(cell.cityLabel.text!)
+        callBack?(filteredCities[indexPath.section].name)
         tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.popToRootViewController(animated: true)
     }
@@ -107,4 +121,37 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         100
     }
+}
+
+extension SearchViewController: LocationUpdateProtocol {
+    func locationDidFailWithError(error: Error) {
+        print(error)
+        userLat = 0
+        userLon = 0
+        userCity = "Unknown"
+        userCountry = "Unknown"
+    }
+    
+    func locationDidUpdateToLocation(latitude: Double, longitude: Double) {
+        userLat = latitude
+        userLon = longitude
+        weatherManager.fetchData(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension SearchViewController: WeatherDisplaying {
+    func didUpdateData(data: WeatherData) {
+        DispatchQueue.main.async {
+            self.userCity = data.city
+            self.userCountry = data.sys.country
+            self.tableView.reloadData()
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        userCity = "Unknown"
+        userCountry = "Unknown"
+    }
+    
+    
 }

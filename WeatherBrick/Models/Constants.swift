@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+struct Constants {
+    static let baseURL = "https://api.openweathermap.org/data/2.5/weather"
+    static let key = "6bd27c0e159f928e71bfeac64a4a1cf3"
+}

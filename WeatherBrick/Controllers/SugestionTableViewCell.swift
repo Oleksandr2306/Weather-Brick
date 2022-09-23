@@ -10,28 +10,28 @@ import UIKit
 
 final class SugestionTableViewCell: UITableViewCell {
 
-    @IBOutlet weak private(set) var cityLabel: UILabel!
+    @IBOutlet weak private var cityLabel: UILabel!
     @IBOutlet weak private var countryLabel: UILabel!
     @IBOutlet weak private var coordinatesLabel: UILabel!
-    override func awakeFromNib() {
-        super.awakeFromNib()
+
+    func configure(city: String, country: String, latitude: Double, longitude: Double) {
+        setCityLabel(city: city)
+        setCountryLabel(country: country)
+        setCoordinatesLabel(latitude: latitude, longitude: longitude)
+        
+        self.layer.borderWidth = 0
+        self.layer.cornerRadius = 10
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-    }
-
-    func setCityLabel(city: String) {
+    
+    private func setCityLabel(city: String) {
         cityLabel.text = city
     }
     
-    func setCountryLabel(country: String) {
+    private func setCountryLabel(country: String) {
         countryLabel.text = country
     }
     
-    func setCoordinatesLabel(latitude: Double, longitude: Double) {
+    private func setCoordinatesLabel(latitude: Double, longitude: Double) {
         coordinatesLabel.text = "Lat: \(latitude); Lon: \(longitude)"
     }
-    
 }
