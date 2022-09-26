@@ -9,18 +9,15 @@
 import Foundation
 import CoreLocation
 
-protocol LocationUpdateProtocol: AnyObject {
+protocol LocationMonitoring: AnyObject {
     func locationDidFailWithError(error: Error)
-    func locationDidUpdateToLocation(latitude : Double, longitude: Double)
-    
+    func locationDidUpdateToLocation(coordinates: CLLocationCoordinate2D)
 }
 
 final class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private lazy var manager = CLLocationManager()
-    private var latitude: Double = 0
-    private var longitude: Double = 0
-    weak var delegate: LocationUpdateProtocol?
+    weak var delegate: LocationMonitoring?
     
     func requestUserPermission() {
         manager.requestWhenInUseAuthorization()
@@ -33,16 +30,14 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     init(manager: CLLocationManager = CLLocationManager()) {
         super.init()
         self.manager.delegate = self
+        manager.delegate = self
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        manager.stopUpdatingLocation()
-        latitude = location.coordinate.latitude
-        longitude = location.coordinate.longitude
-        self.delegate?.locationDidUpdateToLocation(latitude: self.latitude, longitude: self.longitude)
-        
+        guard let coordinates = locations.last?.coordinate else { return }
+        self.delegate?.locationDidUpdateToLocation(coordinates: coordinates)
     }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.delegate?.locationDidFailWithError(error: error)
     }

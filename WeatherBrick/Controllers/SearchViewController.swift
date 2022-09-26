@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class SearchViewController: UIViewController {
     
@@ -23,8 +24,7 @@ final class SearchViewController: UIViewController {
     
     private var userCity = "Unknown"
     private var userCountry = "Unknown"
-    private var userLat: Double = 0
-    private var userLon: Double = 0
+    private var userLocation: CLLocationCoordinate2D! = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,7 +102,7 @@ extension SearchViewController: UITableViewDataSource {
         if !filteredCities.isEmpty {
             cell.configure(city: filteredCities[indexPath.section].name, country: filteredCities[indexPath.section].country, latitude: filteredCities[indexPath.section].coord.lat, longitude: filteredCities[indexPath.section].coord.lon)
         } else {
-            cell.configure(city: userCity, country: userCountry, latitude: userLat, longitude: userLon)
+            cell.configure(city: userCity, country: userCountry, latitude: userLocation.latitude, longitude: userLocation.longitude)
         }
         
         return cell
@@ -127,19 +127,19 @@ extension SearchViewController: UITableViewDelegate {
     }
 }
 
-extension SearchViewController: LocationUpdateProtocol {
+extension SearchViewController: LocationMonitoring {
     func locationDidFailWithError(error: Error) {
         print(error)
-        userLat = 0
-        userLon = 0
+        userLocation.latitude = 0
+        userLocation.longitude = 0
         userCity = "Unknown"
         userCountry = "Unknown"
     }
     
-    func locationDidUpdateToLocation(latitude: Double, longitude: Double) {
-        userLat = latitude
-        userLon = longitude
-        weatherManager.fetchData(latitude: latitude, longitude: longitude)
+    func locationDidUpdateToLocation(coordinates: CLLocationCoordinate2D) {
+        userLocation.latitude = coordinates.latitude
+        userLocation.longitude = coordinates.longitude
+        weatherManager.fetchData(location: coordinates)
     }
 }
 
@@ -156,6 +156,4 @@ extension SearchViewController: WeatherDisplaying {
         userCity = "Unknown"
         userCountry = "Unknown"
     }
-    
-    
 }

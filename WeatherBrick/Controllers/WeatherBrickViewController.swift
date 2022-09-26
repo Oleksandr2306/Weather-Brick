@@ -157,7 +157,7 @@ extension WeatherBrickViewController: WeatherDisplaying {
 }
 
 //MARK: - LocationUpdateProtocol
-extension WeatherBrickViewController: LocationUpdateProtocol {
+extension WeatherBrickViewController: LocationMonitoring {
     func locationDidFailWithError(error: Error) {
         self.activityIndicator.stopAnimating()
         self.imageSelector.fail(for: self.weatherBrickImage)
@@ -167,7 +167,7 @@ extension WeatherBrickViewController: LocationUpdateProtocol {
         self.cityLabel.text = ""
     }
     
-    func locationDidUpdateToLocation(latitude: Double, longitude: Double) {
+    func locationDidUpdateToLocation(coordinates: CLLocationCoordinate2D) {
         self.activityIndicator.startAnimating()
         self.weatherBrickImage.isHidden = false
         self.temperatureLabel.text = ""
@@ -175,6 +175,6 @@ extension WeatherBrickViewController: LocationUpdateProtocol {
         self.cityLabel.text = ""
         self.gpsButton.isHidden = true
         self.searchButton.isHidden = true
-        weatherManager.fetchData(latitude: latitude, longitude: longitude)
+        weatherManager.fetchData(location: coordinates)
     }
 }

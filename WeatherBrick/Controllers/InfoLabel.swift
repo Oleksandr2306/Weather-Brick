@@ -13,7 +13,8 @@ final class InfoLabel: UILabel {
     
     var isOpen = false
     private let title = "INFO:\n\n"
-    private var normalText = """
+    private var normalText =
+        """
         Brick is wet - raining\n
         Brick is dry - sunny \n
         Brick is hard to see - fog\n

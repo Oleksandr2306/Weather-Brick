@@ -17,23 +17,23 @@ protocol WeatherDisplaying: AnyObject {
 class WeatherManager {
     weak var delegate: WeatherDisplaying?
     
-    func fetchData(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        guard let url = urlConstructor(baseString: Constants.baseURL, key: Constants.key, latitude: latitude, longitude: longitude) else { return }
+    func fetchData(location: CLLocationCoordinate2D) {
+        guard let url = url(from: Constants.baseURL, key: Constants.apiKey, location: location) else { return }
         performRequest(url)
     }
     
     func fetchData(city: String) {
         let cityString = city.replacingOccurrences(of: " ", with: "+")
-        guard let url = urlConstructor(baseString: Constants.baseURL, key: Constants.key, city: cityString) else { return }
+        guard let url = url(from: Constants.baseURL, key: Constants.apiKey, city: cityString) else { return }
         performRequest(url)
     }
     
-    private func urlConstructor(baseString: String, key: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees) -> URL? {
-        let urlString = "\(baseString)?appid=\(key)&units=metric&lat=\(latitude)&lon=\(longitude)"
+    private func url(from baseString: String, key: String, location: CLLocationCoordinate2D) -> URL? {
+        let urlString = "\(baseString)?appid=\(key)&units=metric&lat=\(location.latitude)&lon=\(location.longitude)"
         return URL(string: urlString)
     }
     
-    private func urlConstructor(baseString: String, key: String, city: String) -> URL? {
+    private func url(from baseString: String, key: String, city: String) -> URL? {
         let urlString = "\(baseString)?appid=\(key)&units=metric&q=\(city)"
         return URL(string: urlString)
     }
