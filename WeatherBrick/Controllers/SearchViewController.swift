@@ -24,7 +24,7 @@ final class SearchViewController: UIViewController {
     
     private var userCity = "Unknown"
     private var userCountry = "Unknown"
-    private var userLocation: CLLocationCoordinate2D! = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    private var userLocation: CLLocationCoordinate2D? = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,7 +102,8 @@ extension SearchViewController: UITableViewDataSource {
         if !filteredCities.isEmpty {
             cell.configure(city: filteredCities[indexPath.section].name, country: filteredCities[indexPath.section].country, latitude: filteredCities[indexPath.section].coord.lat, longitude: filteredCities[indexPath.section].coord.lon)
         } else {
-            cell.configure(city: userCity, country: userCountry, latitude: userLocation.latitude, longitude: userLocation.longitude)
+            guard let coordinates = userLocation else { return cell }
+            cell.configure(city: userCity, country: userCountry, latitude: coordinates.latitude, longitude: coordinates.longitude)
         }
         
         return cell
@@ -130,15 +131,15 @@ extension SearchViewController: UITableViewDelegate {
 extension SearchViewController: LocationMonitoring {
     func locationDidFailWithError(error: Error) {
         print(error)
-        userLocation.latitude = 0
-        userLocation.longitude = 0
+        userLocation?.latitude = 0
+        userLocation?.longitude = 0
         userCity = "Unknown"
         userCountry = "Unknown"
     }
     
     func locationDidUpdateToLocation(coordinates: CLLocationCoordinate2D) {
-        userLocation.latitude = coordinates.latitude
-        userLocation.longitude = coordinates.longitude
+        userLocation?.latitude = coordinates.latitude
+        userLocation?.longitude = coordinates.longitude
         weatherManager.fetchData(location: coordinates)
     }
 }

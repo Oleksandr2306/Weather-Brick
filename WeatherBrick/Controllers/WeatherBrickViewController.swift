@@ -119,7 +119,7 @@ final class WeatherBrickViewController: UIViewController {
                 UIView.animate(withDuration: 0.25) {
                     self.view.layoutIfNeeded()
                 }
-                locationManager.requestLocation()
+                weatherManager.fetchData(city: city)
             default:
                 break
             }
@@ -130,7 +130,7 @@ final class WeatherBrickViewController: UIViewController {
     
 }
 
-//MARK: - WeatherManagerDelegate
+//MARK: - WeatherDisplaying
 extension WeatherBrickViewController: WeatherDisplaying {
     func didUpdateData(data: WeatherData) {
         DispatchQueue.main.async {
@@ -142,6 +142,7 @@ extension WeatherBrickViewController: WeatherDisplaying {
             self.cityLabel.text = "\(data.sys.country), \(data.city)"
             self.gpsButton.isHidden = false
             self.searchButton.isHidden = false
+            self.city = data.city
         }
     }
     
@@ -156,7 +157,7 @@ extension WeatherBrickViewController: WeatherDisplaying {
     }
 }
 
-//MARK: - LocationUpdateProtocol
+//MARK: - LocationMonitoring
 extension WeatherBrickViewController: LocationMonitoring {
     func locationDidFailWithError(error: Error) {
         self.activityIndicator.stopAnimating()

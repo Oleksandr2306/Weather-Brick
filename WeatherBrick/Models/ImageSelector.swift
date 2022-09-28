@@ -11,7 +11,7 @@ import Foundation
 
 final class ImageSelector {
     
-    private enum brickImages {
+    private enum BrickImages {
         case raining
         case normal
         case fog
@@ -47,33 +47,33 @@ final class ImageSelector {
         
         switch weatherCondition.weather[0].id {
         case 0...200 :
-            image.image = brickImages.hot.image
+            image.image = BrickImages.hot.image
         case 200...599 :
-            image.image = brickImages.raining.image
+            image.image = BrickImages.raining.image
         case 600...699 :
-            image.image = brickImages.snowing.image
+            image.image = BrickImages.snowing.image
         case 700...762 :
             //fog
-            image.image = brickImages.normal.image
+            image.image = BrickImages.normal.image
             animateFog(for: image)
         case 763...799 :
             //wind
-            image.image = brickImages.normal.image
+            image.image = BrickImages.normal.image
             animateWind(for: image)
         case 800...900 :
-            image.image = brickImages.normal.image
+            image.image = BrickImages.normal.image
         default:
-            image.image = brickImages.normal.image
+            image.image = BrickImages.normal.image
         }
         
         if image.image == nil {
-            image.image = brickImages.fail.image
+            image.image = BrickImages.fail.image
         }
         
     }
     
     func fail(for image: UIImageView) {
-        image.image = brickImages.fail.image
+        image.image = BrickImages.fail.image
     }
     
     private func animateFog(for image: UIImageView) {
